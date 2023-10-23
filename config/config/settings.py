@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,27 +22,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nx!ysb=hxd+x63va&cx=15z$)pqk77+izdjbc!c)xdcv0g+_fq'
+SECRET_KEY = os.environ.get('SECRET_KEY') or ImproperlyConfigured('SECRET_KEY not set')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-APP_HOST = '127.0.0.1'
+APP_HOST = os.environ.get('APP_HOST') or ImproperlyConfigured('APP_HOST not set')
 
 ALLOWED_HOSTS = [APP_HOST]
 
-CSRF_TRUSTED_ORIGINS = ['http://' + APP_HOST + ':8000']
+CSRF_TRUSTED_ORIGINS = ['http://' + APP_HOST + ':80']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'authenication',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authenication'
 ]
 
 MIDDLEWARE = [
@@ -71,14 +75,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
+
+SALT = os.environ.get('SALT') or ImproperlyConfigured('SALT not set')
+ACCESS_TOKEN_EXP = 15
+REFRESH_TOKEN_EXP = 60
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get('POSTGRES_DB') or ImproperlyConfigured('POSTGRES_DB not set'),
+        "USER": os.environ.get('POSTGRES_USER') or ImproperlyConfigured('POSTGRES_USER not set'),
+        "PASSWORD": os.environ.get('POSTGRES_PASSWORD') or ImproperlyConfigured('POSTGRES_PASSWORD not set'),
+        "HOST": os.environ.get('POSTGRES_HOST') or ImproperlyConfigured('POSTGRES_HOST not set'),
+        "PORT": "5432",
     }
 }
 
@@ -103,9 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -120,3 +133,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s - [%(levelname)s] - %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+    },
+    'loggers': {
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': True
+        },
+    }
+}
