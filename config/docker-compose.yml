@@ -1,17 +1,22 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14.5
     container_name: postgres
     volumes:
-      - pgdata:/var/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     env_file:
       - .env
   main_app:
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
       context: .
     container_name: app
+    volumes:
+      - ./static:/app/static
     depends_on:
       - db
-    env_file:
-      - .env
+    ports:
+      - "80:80"
+    env_file: .env

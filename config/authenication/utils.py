@@ -18,7 +18,7 @@ def generate_access(hash: str) -> str:
         'exp': datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXP)
     }
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-    return token.decode('utf-8')
+    return token
 
 
 def generate_refresh(hash: str):
@@ -27,7 +27,7 @@ def generate_refresh(hash: str):
         'exp': datetime.utcnow() + timedelta(minutes=settings.REFRESH_TOKEN_EXP)
     }
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-    return token.decode('utf-8')
+    return token
 
 
 def decode_token(token: str):

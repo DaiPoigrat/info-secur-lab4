@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY') or ImproperlyConfigured('SECRET_KEY not set')
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'django-insecure-nx!ysbhxd+x63va&cx15z$)pqk77+izdjbc!c)xdcv0g+_fq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-APP_HOST = os.environ.get('APP_HOST') or ImproperlyConfigured('APP_HOST not set')
+APP_HOST = '127.0.0.1'
 
 ALLOWED_HOSTS = [APP_HOST]
 
@@ -77,7 +77,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-SALT = os.environ.get('SALT') or ImproperlyConfigured('SALT not set')
+SALT = os.environ.get('SALT') or 'uffLAB4%gooD!!&362@zxcqqe'
 ACCESS_TOKEN_EXP = 15
 REFRESH_TOKEN_EXP = 60
 
@@ -87,10 +87,10 @@ REFRESH_TOKEN_EXP = 60
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get('POSTGRES_DB') or ImproperlyConfigured('POSTGRES_DB not set'),
-        "USER": os.environ.get('POSTGRES_USER') or ImproperlyConfigured('POSTGRES_USER not set'),
-        "PASSWORD": os.environ.get('POSTGRES_PASSWORD') or ImproperlyConfigured('POSTGRES_PASSWORD not set'),
-        "HOST": os.environ.get('POSTGRES_HOST') or ImproperlyConfigured('POSTGRES_HOST not set'),
+        "NAME": os.environ.get('POSTGRES_DB') or 'postgres',
+        "USER": os.environ.get('POSTGRES_USER') or 'admin',
+        "PASSWORD": os.environ.get('POSTGRES_PASSWORD') or '2a9f21c15c52b7ee',
+        "HOST": os.environ.get('POSTGRES_HOST') or 'db',
         "PORT": "5432",
     }
 }
@@ -127,7 +127,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
